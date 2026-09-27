@@ -1,54 +1,51 @@
 import { useState } from 'react'
-import { money, type HourResult, type Schedule, type WeekResult } from '../lib/calc'
-import { checkMove, coachRequest, getCoaching, type CoachResult } from '../lib/ai'
+import { money, type HourResult, type Schedule, type Slot, type WeekResult } from '../lib/calc'
+import { applyMove, coach, CONSTRAINTS, type Coaching } from '../lib/coach'
 
 interface Props {
   schedule: Schedule
   perSlot: HourResult[]
+  slots: Slot[] // indexed by dow * 24 + hr
   week: WeekResult
   onApply: (next: Schedule) => void
 }
 
-export default function CoachCard({ schedule, perSlot, week, onApply }: Props) {
-  const [constraints, setConstraints] = useState('')
-  const [result, setResult] = useState<CoachResult | null>(null)
+export default function CoachCard({ schedule, perSlot, slots, week, onApply }: Props) {
+  const [limits, setLimits] = useState<string[]>([])
+  const [result, setResult] = useState<Coaching | null>(null)
   const [applied, setApplied] = useState<Set<number>>(new Set())
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [thinking, setThinking] = useState(false)
 
-  const run = async () => {
-    setLoading(true); setError('')
-    try {
-      setResult(await getCoaching(coachRequest(schedule, perSlot, week, constraints)))
+  const run = () => {
+    setThinking(true)
+    // Tiny delay so the button state is visible; the search itself takes milliseconds.
+    setTimeout(() => {
+      setResult(coach(schedule, perSlot, slots, limits))
       setApplied(new Set())
-    } catch (e) {
-      setError(e instanceof Error ? e.message : String(e))
-    } finally {
-      setLoading(false)
-    }
+      setThinking(false)
+    }, 350)
   }
 
-  // Re-check every suggestion against the *current* schedule with the app's own math.
-  const checked = result?.moves.map(m => checkMove(m, schedule, perSlot)) ?? []
+  const toggle = (id: string) => setLimits(l => (l.includes(id) ? l.filter(x => x !== id) : [...l, id]))
 
   return (
     <section className="card coach">
-      <div className="ai-tag">✨ AI</div>
+      <div className="ai-tag">✨ Smart coach</div>
       <h2>Schedule coach</h2>
-      <p className="muted small">Claude studies your week against real NYC pay data and proposes moves. You decide what to apply.</p>
-      <label className="small">
-        Anything you can't change?
-        <input
-          className="text-input"
-          placeholder="e.g. day job Mon–Fri 9–5, no Sundays"
-          value={constraints}
-          onChange={e => setConstraints(e.target.value)}
-        />
-      </label>
-      <button className="primary" onClick={run} disabled={loading || !week.hours}>
-        {loading ? 'Analyzing your week…' : result ? 'Re-analyze my week' : 'Find better hours'}
+      <p className="muted small">
+        Tests every possible shift swap against real NYC pay data and suggests the best ones. You decide what to apply.
+      </p>
+      <div className="small">What can't you change?</div>
+      <div className="chips">
+        {CONSTRAINTS.map(c => (
+          <button key={c.id} className={`chip ${limits.includes(c.id) ? 'on' : ''}`} onClick={() => toggle(c.id)}>
+            {limits.includes(c.id) ? '✓ ' : ''}{c.label}
+          </button>
+        ))}
+      </div>
+      <button className="primary" onClick={run} disabled={thinking || !week.hours}>
+        {thinking ? 'Searching 168 hours…' : result ? 'Re-analyze my week' : 'Find better hours'}
       </button>
-      {error && <p className="error small">{error}</p>}
 
       {result && (
         <div className="coach-result">
@@ -59,26 +56,28 @@ export default function CoachCard({ schedule, perSlot, week, onApply }: Props) {
               <span className="small">{ins.detail}</span>
             </div>
           ))}
-          <h3>Suggested moves</h3>
-          {checked.map((c, i) => {
+          {result.moves.length > 0 && <h3>Suggested moves</h3>}
+          {result.moves.map((m, i) => {
             const done = applied.has(i)
-            const worthIt = c.valid && c.gain > 0.5
+            const check = applyMove(m, schedule, perSlot)
+            const ok = check.valid && (check.gain > 0.5 || m.required)
             return (
               <div key={i} className={`move ${done ? 'done' : ''}`}>
                 <div className="move-head">
-                  <strong>{c.move.title}</strong>
-                  {worthIt && !done && <span className="gain">+{money(c.gain)}/wk</span>}
+                  <strong>{m.title}</strong>
+                  {ok && !done && (check.gain >= 0
+                    ? <span className="gain">+{money(check.gain)}/wk</span>
+                    : <span className="gain cost">{money(check.gain)}/wk</span>)}
                 </div>
-                <span className="small muted">{c.move.reason}</span>
+                <span className="small muted">{m.reason}</span>
                 {done
                   ? <span className="small applied">✓ Applied</span>
-                  : worthIt
-                    ? <button className="ghost small-btn" onClick={() => { onApply(c.next); setApplied(new Set(applied).add(i)) }}>Apply move</button>
-                    : <span className="small muted">Doesn't fit your current week anymore</span>}
+                  : ok
+                    ? <button className="ghost small-btn" onClick={() => { onApply(check.next); setApplied(new Set(applied).add(i)) }}>Apply move</button>
+                    : <span className="small muted">Doesn't fit your current week anymore. Re-analyze.</span>}
               </div>
             )
           })}
-          <p className="small muted">Gains are calculated by Real Hourly from the trip data, not by the AI.</p>
         </div>
       )}
     </section>

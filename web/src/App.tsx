@@ -12,7 +12,7 @@ import SourcesModal from './components/SourcesModal'
 import TripsTable, { type Trip } from './components/TripsTable'
 import ScanCard from './components/ScanCard'
 import CoachCard from './components/CoachCard'
-import { scheduleFromBlocks, type ExtractResult } from './lib/ai'
+import { scheduleFromBlocks, type ScanResult } from './lib/scan'
 import { money } from './lib/calc'
 
 interface SlotsFile {
@@ -43,10 +43,10 @@ export default function App() {
   const [original, setOriginal] = useState<Schedule>(Array(168).fill(false))
   const [showBest, setShowBest] = useState(false)
   const [showSources, setShowSources] = useState(false)
-  const [scanned, setScanned] = useState<ExtractResult | null>(null)
+  const [scanned, setScanned] = useState<ScanResult | null>(null)
 
   // AI read a screenshot: that becomes "your" week, and the new baseline for before/after.
-  const onExtracted = (r: ExtractResult) => {
+  const onExtracted = (r: ScanResult) => {
     const s = scheduleFromBlocks(r.shifts)
     setScanned(r)
     setSchedule(s)
@@ -66,6 +66,13 @@ export default function App() {
       setSettings(prev => ({ ...prev, car: demo.car }))
     })
   }, [])
+
+  // Slot data indexed by dow * 24 + hr, for the coach's explanations.
+  const slotsByIndex = useMemo(() => {
+    const arr: Slot[] = Array(168)
+    for (const s of data?.slots ?? []) arr[slotIndex(s.dow, s.hr)] = s
+    return arr
+  }, [data])
 
   // Expected result for one online hour in each of the 168 slots.
   const perSlot = useMemo(() => {
@@ -107,12 +114,12 @@ export default function App() {
         <div>
           {scanned ? (
             <>
-              <strong>Your week</strong> · read from your {scanned.platform ?? 'earnings'} screenshot by AI
+              <strong>Your week</strong> · read from your screenshot by on-device AI
               <div className="muted">
-                {scanned.shifts.length} work blocks found
+                {scanned.shiftCount} shifts found
                 {scanned.total_earnings != null && <> · {money(scanned.total_earnings)} earned</>}
                 {scanned.total_earnings != null && scanned.total_hours ? <> over {scanned.total_hours} hrs = <strong>{money(scanned.total_earnings / scanned.total_hours, 2)}/hr</strong> according to the app</> : null}
-                {scanned.notes && <div className="small">AI note: {scanned.notes}</div>}
+                {scanned.notes && <div className="small">{scanned.notes}</div>}
               </div>
             </>
           ) : (
@@ -152,7 +159,7 @@ export default function App() {
 
         <aside className="side">
           <SummaryBar week={week} before={before} />
-          <CoachCard schedule={schedule} perSlot={perSlot} week={week} onApply={setSchedule} />
+          <CoachCard schedule={schedule} perSlot={perSlot} slots={slotsByIndex} week={week} onApply={setSchedule} />
           <CostPanel settings={settings} onChange={setSettings} />
         </aside>
       </main>

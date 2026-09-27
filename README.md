@@ -9,15 +9,17 @@ click and drag to move their hours, and watch their real hourly rate and weekly 
 > **The app says $28.69/hr. She really makes $15.19/hr**, below NYC's $17 minimum wage.
 > Moving the same 24 hours to better slots: **+$127/week (~$6,350/year)**.
 
-## Where the AI comes in (not a chatbot)
+## Where the AI comes in (not a chatbot, no API key)
 
-| Feature | What Claude does | What the person does |
+Everything runs locally in the browser. No account, no key, nothing uploaded.
+
+| Feature | How it works | What the person does |
 |---|---|---|
-| **Scan your earnings** | Reads a screenshot of a weekly earnings / trip-history screen (vision + structured output) and turns it into hour blocks on the calendar, splitting overnight shifts at midnight | Drops in a screenshot, sees their own week scored against real pay data |
-| **Schedule coach** | Studies the 7×24 real-$/hr grid and the driver's hours, respects their constraints ("day job 9–5"), and proposes concrete shift swaps with reasons | Chooses which moves to apply and sees the weekly gain |
+| **Scan your earnings** | [Tesseract.js](https://github.com/naptha/tesseract.js), an LSTM neural-network OCR engine compiled to WebAssembly, reads a screenshot of a weekly earnings screen. `src/lib/scan.ts` turns lines like `Mon, Sep 14 $101.40` / `10:00 PM – 2:00 AM` into hour blocks, splitting overnight shifts at midnight | Drops in a screenshot and sees their own week scored against real pay data |
+| **Schedule coach** | `src/lib/coach.ts` searches every possible shift swap across all 168 hours of the week, scores each one with the real-pay model, respects the driver's limits (day job, no late nights, days off), and explains each move using the trip data (e.g. "1.9× more rides then, so less unpaid waiting") | Picks their limits, chooses which moves to apply, and watches take-home change |
 
-The AI suggests, the real data decides: every suggested move is re-scored by the app's own math (`src/lib/ai.ts → checkMove`), and only moves that actually raise take-home get an Apply button.
-Model: `claude-opus-5` via the official `@anthropic-ai/sdk`, called from a Vite server middleware (`web/server/ai.ts`) so the API key never reaches the browser.
+Every suggestion is re-checked against the current calendar before it can be applied, and the gain shown comes from the app's own math.
+Open `http://localhost:5173/?demo` to auto-scan the sample screenshot (`web/public/samples/earnings-week.png`, a made-up example).
 
 ## Built on real data
 
@@ -49,7 +51,9 @@ web/                      # React + Vite + TypeScript app (no backend)
   public/data/            # slots.json (168 slots), demo_driver.json (Maria + sampled real trips)
   src/lib/calc.ts         # all the money math
   src/lib/costs.ts        # AAA / IRS / EIA inputs with sources
-  src/components/         # WeekCalendar, Headline, SummaryBar, CostPanel, SourcesModal, TripsTable
+  src/lib/scan.ts         # on-device OCR (Tesseract.js) → shifts
+  src/lib/coach.ts        # schedule search + explanations
+  src/components/         # WeekCalendar, Headline, SummaryBar, CostPanel, ScanCard, CoachCard, SourcesModal, TripsTable
 ```
 
 ## Run it
@@ -57,12 +61,10 @@ web/                      # React + Vite + TypeScript app (no backend)
 ```bash
 cd web
 npm install
-# AI features: put your key in web/.env (gitignored)
-echo ANTHROPIC_API_KEY=sk-ant-... > .env
 npm run dev          # open the printed http://localhost:5173
 ```
 
-Without a key, everything except the two AI cards still works. `web/public/samples/earnings-week.png` is a made-up sample screenshot for demos.
+No API keys needed. The first screenshot scan downloads the OCR model (~10 MB) from a CDN, so be online the first time.
 
 Rebuild the data (optional, ~40 s, the JSON is already committed):
 

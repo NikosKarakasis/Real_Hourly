@@ -223,3 +223,12 @@ button:disabled { opacity: 0.6; cursor: default; }
 .small-btn { align-self: flex-start; padding: 5px 12px; font-size: 0.85rem; }
 .applied { color: var(--accent-ink); font-weight: 700; }
 .driver > div:nth-child(2) { flex: 1 1 260px; min-width: 0; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  border: 1px solid var(--line); background: white; border-radius: 999px; padding: 5px 11px;
+  font-size: 0.8rem; cursor: pointer; color: var(--muted); transition: all 0.15s;
+}
+.chip:hover { border-color: #c4b5fd; }
+.chip.on { background: #f5f3ff; border-color: #a78bfa; color: #5b21b6; font-weight: 600; }
+.gain.cost { color: #9f1239; background: #ffe4e6; }
