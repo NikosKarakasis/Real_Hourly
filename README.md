@@ -9,6 +9,16 @@ click and drag to move their hours, and watch their real hourly rate and weekly 
 > **The app says $28.69/hr. She really makes $15.19/hr**, below NYC's $17 minimum wage.
 > Moving the same 24 hours to better slots: **+$127/week (~$6,350/year)**.
 
+## Where the AI comes in (not a chatbot)
+
+| Feature | What Claude does | What the person does |
+|---|---|---|
+| **Scan your earnings** | Reads a screenshot of a weekly earnings / trip-history screen (vision + structured output) and turns it into hour blocks on the calendar, splitting overnight shifts at midnight | Drops in a screenshot, sees their own week scored against real pay data |
+| **Schedule coach** | Studies the 7×24 real-$/hr grid and the driver's hours, respects their constraints ("day job 9–5"), and proposes concrete shift swaps with reasons | Chooses which moves to apply and sees the weekly gain |
+
+The AI suggests, the real data decides: every suggested move is re-scored by the app's own math (`src/lib/ai.ts → checkMove`), and only moves that actually raise take-home get an Apply button.
+Model: `claude-opus-5` via the official `@anthropic-ai/sdk`, called from a Vite server middleware (`web/server/ai.ts`) so the API key never reaches the browser.
+
 ## Built on real data
 
 | Data | Source |
@@ -47,8 +57,12 @@ web/                      # React + Vite + TypeScript app (no backend)
 ```bash
 cd web
 npm install
+# AI features: put your key in web/.env (gitignored)
+echo ANTHROPIC_API_KEY=sk-ant-... > .env
 npm run dev          # open the printed http://localhost:5173
 ```
+
+Without a key, everything except the two AI cards still works. `web/public/samples/earnings-week.png` is a made-up sample screenshot for demos.
 
 Rebuild the data (optional, ~40 s, the JSON is already committed):
 

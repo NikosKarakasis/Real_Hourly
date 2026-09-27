@@ -10,6 +10,10 @@ import Headline from './components/Headline'
 import SummaryBar from './components/SummaryBar'
 import SourcesModal from './components/SourcesModal'
 import TripsTable, { type Trip } from './components/TripsTable'
+import ScanCard from './components/ScanCard'
+import CoachCard from './components/CoachCard'
+import { scheduleFromBlocks, type ExtractResult } from './lib/ai'
+import { money } from './lib/calc'
 
 interface SlotsFile {
   month: string
@@ -39,6 +43,15 @@ export default function App() {
   const [original, setOriginal] = useState<Schedule>(Array(168).fill(false))
   const [showBest, setShowBest] = useState(false)
   const [showSources, setShowSources] = useState(false)
+  const [scanned, setScanned] = useState<ExtractResult | null>(null)
+
+  // AI read a screenshot: that becomes "your" week, and the new baseline for before/after.
+  const onExtracted = (r: ExtractResult) => {
+    const s = scheduleFromBlocks(r.shifts)
+    setScanned(r)
+    setSchedule(s)
+    setOriginal(s)
+  }
 
   useEffect(() => {
     Promise.all([
@@ -88,16 +101,33 @@ export default function App() {
         <button className="ghost" onClick={() => setShowSources(true)}>Assumptions &amp; sources</button>
       </header>
 
+      <div className="grid">
       <section className="driver card">
-        <div className="avatar">{driver.name[0]}</div>
+        <div className="avatar">{scanned ? 'Y' : driver.name[0]}</div>
         <div>
-          <strong>{driver.name}</strong> · rideshare driver, NYC
-          <div className="muted">{driver.blurb}</div>
+          {scanned ? (
+            <>
+              <strong>Your week</strong> · read from your {scanned.platform ?? 'earnings'} screenshot by AI
+              <div className="muted">
+                {scanned.shifts.length} work blocks found
+                {scanned.total_earnings != null && <> · {money(scanned.total_earnings)} earned</>}
+                {scanned.total_earnings != null && scanned.total_hours ? <> over {scanned.total_hours} hrs = <strong>{money(scanned.total_earnings / scanned.total_hours, 2)}/hr</strong> according to the app</> : null}
+                {scanned.notes && <div className="small">AI note: {scanned.notes}</div>}
+              </div>
+            </>
+          ) : (
+            <>
+              <strong>{driver.name}</strong> · rideshare driver, NYC
+              <div className="muted">{driver.blurb}</div>
+            </>
+          )}
         </div>
         <div className="badge">
           Built from <strong>{data.trip_count.toLocaleString()}</strong> real Uber/Lyft trips · NYC TLC, {data.month}
         </div>
       </section>
+        <ScanCard onExtracted={onExtracted} />
+      </div>
 
       <Headline week={week} minWage={NYC_MIN_WAGE} />
 
@@ -122,11 +152,12 @@ export default function App() {
 
         <aside className="side">
           <SummaryBar week={week} before={before} />
+          <CoachCard schedule={schedule} perSlot={perSlot} week={week} onApply={setSchedule} />
           <CostPanel settings={settings} onChange={setSettings} />
         </aside>
       </main>
 
-      <TripsTable trips={driver.trips} name={driver.name} />
+      {!scanned && <TripsTable trips={driver.trips} name={driver.name} />}
 
       <footer className="muted small">
         Estimates based on real NYC trip data and the costs you enter. Not tax or financial advice.
