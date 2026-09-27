@@ -1,0 +1,351 @@
+{
+ "name": "Maria",
+ "car": "medium_sedan",
+ "blurb": "Drives a Toyota Camry in Queens after her day job: late weeknights (11pm\u20133am) and early weekend mornings.",
+ "shifts": [
+  {
+   "dow": 0,
+   "start": 23,
+   "end": 24
+  },
+  {
+   "dow": 1,
+   "start": 23,
+   "end": 24
+  },
+  {
+   "dow": 2,
+   "start": 23,
+   "end": 24
+  },
+  {
+   "dow": 3,
+   "start": 23,
+   "end": 24
+  },
+  {
+   "dow": 1,
+   "start": 0,
+   "end": 3
+  },
+  {
+   "dow": 2,
+   "start": 0,
+   "end": 3
+  },
+  {
+   "dow": 3,
+   "start": 0,
+   "end": 3
+  },
+  {
+   "dow": 4,
+   "start": 0,
+   "end": 3
+  },
+  {
+   "dow": 5,
+   "start": 5,
+   "end": 9
+  },
+  {
+   "dow": 6,
+   "start": 5,
+   "end": 9
+  }
+ ],
+ "hours": 24,
+ "gross": 433.23,
+ "trips": [
+  {
+   "pickup": "2026-07-06 23:41",
+   "driver_pay": 6.42,
+   "tips": 0.0,
+   "miles": 1.53,
+   "engaged_min": 8.6,
+   "app": "Uber",
+   "dow": 0,
+   "hr": 23
+  },
+  {
+   "pickup": "2026-07-07 23:45",
+   "driver_pay": 19.34,
+   "tips": 5.86,
+   "miles": 3.96,
+   "engaged_min": 23.2,
+   "app": "Uber",
+   "dow": 1,
+   "hr": 23
+  },
+  {
+   "pickup": "2026-07-07 23:54",
+   "driver_pay": 5.58,
+   "tips": 0.0,
+   "miles": 1.36,
+   "engaged_min": 8.6,
+   "app": "Lyft",
+   "dow": 1,
+   "hr": 23
+  },
+  {
+   "pickup": "2026-07-01 23:13",
+   "driver_pay": 15.58,
+   "tips": 0.0,
+   "miles": 3.35,
+   "engaged_min": 20.0,
+   "app": "Uber",
+   "dow": 2,
+   "hr": 23
+  },
+  {
+   "pickup": "2026-07-01 23:41",
+   "driver_pay": 12.45,
+   "tips": 0.0,
+   "miles": 3.31,
+   "engaged_min": 23.0,
+   "app": "Uber",
+   "dow": 2,
+   "hr": 23
+  },
+  {
+   "pickup": "2026-07-02 23:05",
+   "driver_pay": 4.37,
+   "tips": 0.0,
+   "miles": 0.73,
+   "engaged_min": 6.9,
+   "app": "Uber",
+   "dow": 3,
+   "hr": 23
+  },
+  {
+   "pickup": "2026-07-02 23:57",
+   "driver_pay": 14.33,
+   "tips": 3.0,
+   "miles": 1.93,
+   "engaged_min": 23.8,
+   "app": "Uber",
+   "dow": 3,
+   "hr": 23
+  },
+  {
+   "pickup": "2026-07-07 00:22",
+   "driver_pay": 14.69,
+   "tips": 3.07,
+   "miles": 4.8,
+   "engaged_min": 15.3,
+   "app": "Uber",
+   "dow": 1,
+   "hr": 0
+  },
+  {
+   "pickup": "2026-07-07 01:37",
+   "driver_pay": 7.04,
+   "tips": 0.0,
+   "miles": 1.13,
+   "engaged_min": 13.6,
+   "app": "Lyft",
+   "dow": 1,
+   "hr": 1
+  },
+  {
+   "pickup": "2026-07-07 02:39",
+   "driver_pay": 21.13,
+   "tips": 0.0,
+   "miles": 7.34,
+   "engaged_min": 22.8,
+   "app": "Lyft",
+   "dow": 1,
+   "hr": 2
+  },
+  {
+   "pickup": "2026-07-01 00:47",
+   "driver_pay": 20.08,
+   "tips": 0.0,
+   "miles": 3.64,
+   "engaged_min": 26.7,
+   "app": "Uber",
+   "dow": 2,
+   "hr": 0
+  },
+  {
+   "pickup": "2026-07-01 01:59",
+   "driver_pay": 40.54,
+   "tips": 0.0,
+   "miles": 9.97,
+   "engaged_min": 26.3,
+   "app": "Uber",
+   "dow": 2,
+   "hr": 1
+  },
+  {
+   "pickup": "2026-07-01 02:31",
+   "driver_pay": 5.42,
+   "tips": 0.0,
+   "miles": 1.18,
+   "engaged_min": 10.3,
+   "app": "Uber",
+   "dow": 2,
+   "hr": 2
+  },
+  {
+   "pickup": "2026-07-02 00:33",
+   "driver_pay": 4.0,
+   "tips": 0.0,
+   "miles": 0.64,
+   "engaged_min": 6.6,
+   "app": "Lyft",
+   "dow": 3,
+   "hr": 0
+  },
+  {
+   "pickup": "2026-07-02 01:51",
+   "driver_pay": 24.04,
+   "tips": 0.0,
+   "miles": 7.66,
+   "engaged_min": 22.0,
+   "app": "Uber",
+   "dow": 3,
+   "hr": 1
+  },
+  {
+   "pickup": "2026-07-02 02:46",
+   "driver_pay": 4.0,
+   "tips": 0.0,
+   "miles": 0.47,
+   "engaged_min": 7.4,
+   "app": "Uber",
+   "dow": 3,
+   "hr": 2
+  },
+  {
+   "pickup": "2026-07-03 00:44",
+   "driver_pay": 6.48,
+   "tips": 0.0,
+   "miles": 1.02,
+   "engaged_min": 8.3,
+   "app": "Uber",
+   "dow": 4,
+   "hr": 0
+  },
+  {
+   "pickup": "2026-07-03 01:18",
+   "driver_pay": 13.56,
+   "tips": 0.0,
+   "miles": 1.45,
+   "engaged_min": 11.9,
+   "app": "Uber",
+   "dow": 4,
+   "hr": 1
+  },
+  {
+   "pickup": "2026-07-03 02:26",
+   "driver_pay": 4.0,
+   "tips": 0.0,
+   "miles": 0.59,
+   "engaged_min": 7.3,
+   "app": "Lyft",
+   "dow": 4,
+   "hr": 2
+  },
+  {
+   "pickup": "2026-07-04 05:07",
+   "driver_pay": 29.86,
+   "tips": 0.0,
+   "miles": 9.45,
+   "engaged_min": 35.3,
+   "app": "Uber",
+   "dow": 5,
+   "hr": 5
+  },
+  {
+   "pickup": "2026-07-04 06:32",
+   "driver_pay": 45.29,
+   "tips": 0.0,
+   "miles": 14.55,
+   "engaged_min": 31.8,
+   "app": "Uber",
+   "dow": 5,
+   "hr": 6
+  },
+  {
+   "pickup": "2026-07-04 07:13",
+   "driver_pay": 11.83,
+   "tips": 0.0,
+   "miles": 2.68,
+   "engaged_min": 15.7,
+   "app": "Uber",
+   "dow": 5,
+   "hr": 7
+  },
+  {
+   "pickup": "2026-07-04 08:33",
+   "driver_pay": 5.41,
+   "tips": 0.0,
+   "miles": 0.98,
+   "engaged_min": 7.3,
+   "app": "Lyft",
+   "dow": 5,
+   "hr": 8
+  },
+  {
+   "pickup": "2026-07-04 08:34",
+   "driver_pay": 15.2,
+   "tips": 0.0,
+   "miles": 3.38,
+   "engaged_min": 26.6,
+   "app": "Uber",
+   "dow": 5,
+   "hr": 8
+  },
+  {
+   "pickup": "2026-07-05 05:51",
+   "driver_pay": 18.23,
+   "tips": 5.67,
+   "miles": 7.03,
+   "engaged_min": 20.2,
+   "app": "Uber",
+   "dow": 6,
+   "hr": 5
+  },
+  {
+   "pickup": "2026-07-05 06:23",
+   "driver_pay": 26.68,
+   "tips": 0.0,
+   "miles": 6.52,
+   "engaged_min": 33.6,
+   "app": "Uber",
+   "dow": 6,
+   "hr": 6
+  },
+  {
+   "pickup": "2026-07-05 07:21",
+   "driver_pay": 7.31,
+   "tips": 0.0,
+   "miles": 1.29,
+   "engaged_min": 11.0,
+   "app": "Uber",
+   "dow": 6,
+   "hr": 7
+  },
+  {
+   "pickup": "2026-07-05 08:08",
+   "driver_pay": 7.27,
+   "tips": 0.0,
+   "miles": 1.78,
+   "engaged_min": 11.7,
+   "app": "Lyft",
+   "dow": 6,
+   "hr": 8
+  },
+  {
+   "pickup": "2026-07-05 08:29",
+   "driver_pay": 5.5,
+   "tips": 0.0,
+   "miles": 0.83,
+   "engaged_min": 10.6,
+   "app": "Uber",
+   "dow": 6,
+   "hr": 8
+  }
+ ]
+}

@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Real Hourly
+node_modules/
+web/dist/
+data/raw/
+*.parquet
