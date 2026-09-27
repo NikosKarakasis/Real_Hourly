@@ -13,8 +13,8 @@ interface Props {
 
 /** Red → amber → green, by where this slot's real $/hr falls between the week's worst and best. */
 function heat(t: number) {
-  const hue = 4 + t * 128 // 4 = red, 132 = green
-  return `hsl(${hue} 72% 46% / 0.42)`
+  const hue = 4 + t * 136 // 4 = soft red, 140 = soft green
+  return `hsl(${hue} ${70 - t * 10}% ${84 - t * 4}%)`
 }
 
 export default function WeekCalendar({ perSlot, schedule, onChange, best }: Props) {
@@ -68,7 +68,9 @@ export default function WeekCalendar({ perSlot, schedule, onChange, best }: Prop
         <span>Worse</span>
         <div className="legend-bar" />
         <span>Better</span>
-        <span className="muted small">real $/hr: ${lo.toFixed(0)} – ${hi.toFixed(0)}</span>
+        <span className="small">real $/hr: ${lo.toFixed(0)} – ${hi.toFixed(0)}</span>
+        <span className="legend-on" />
+        <span>your hours</span>
       </div>
     </div>
   )

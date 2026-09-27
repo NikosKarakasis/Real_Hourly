@@ -78,7 +78,11 @@ export default function App() {
     <div className="app">
       <header className="top">
         <div>
-          <h1><span className="logo">⏱</span> Real Hourly</h1>
+          <h1><span className="logo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f766e" strokeWidth="2.2" strokeLinecap="round">
+              <circle cx="12" cy="13" r="8" /><path d="M12 9v4l2.5 1.5M10 2h4" />
+            </svg>
+          </span> Real Hourly</h1>
           <p className="tagline">What you actually earn per hour, after gas, car wear, empty miles, and taxes.</p>
         </div>
         <button className="ghost" onClick={() => setShowSources(true)}>Assumptions &amp; sources</button>

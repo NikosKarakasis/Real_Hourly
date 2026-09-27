@@ -1,3 +1,4 @@
+import type React from 'react'
 import { costPerMile, type Settings } from '../lib/calc'
 import { CARS } from '../lib/costs'
 
@@ -50,6 +51,7 @@ function Slider({ label, value, min, max, step, fmt, onChange }: {
     <label className="slider">
       <span className="slider-head">{label}<strong>{fmt(value)}</strong></span>
       <input type="range" min={min} max={max} step={step} value={value}
+        style={{ '--fill': `${((value - min) / (max - min)) * 100}%` } as React.CSSProperties}
         onChange={e => onChange(Number(e.target.value))} />
     </label>
   )
